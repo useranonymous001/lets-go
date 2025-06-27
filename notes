@@ -1,0 +1,23 @@
+int bitmap_search(string t, string p) {
+   int m = p.length();
+   long p_mask[300];
+   long A = ~1;
+   if (m == 0)
+      return -1;
+   if (m > 63) {
+      cout << "Pattern is too long!";
+      return -1;
+   }
+   for (int i = 0; i <= 299; ++i)
+      p_mask[i] = ~0;
+   for (int i = 0; i < m; ++i)
+      p_mask[p[i]] &= ~(1L << i);
+   for (int i = 0; i < t.length(); ++i) {
+      A |= p_mask[t[i]];
+      A <<= 1;
+      if ((A & (1L << m)) == 0)
+         return i - m + 1;
+   }
+   return -1;
+}
+    

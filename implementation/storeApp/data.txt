@@ -1,0 +1,5 @@
+name=innocent Geek
+dallo=dallo@gmail.com
+rohan=rohan@gmail.com
+filename=credentials.txt
+location=Jhapa, Nepal
