@@ -57,7 +57,8 @@ func main() {
 
 	// MainInterface()
 	// PracticeMain()
-	TypeAssertionMain()
+	// TypeAssertionMain()
+	MainInterfaceComposition()
 
 }
 
