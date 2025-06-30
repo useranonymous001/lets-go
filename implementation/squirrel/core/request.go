@@ -3,9 +3,11 @@ package core
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -37,26 +39,44 @@ func ParseRequest(conn net.Conn) (*Request, error) {
 	}
 
 	headers := make(map[string]string)
-
+	var contentLength int64 = 0
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil || line == "\r\n" {
 			break
 		}
-		fmt.Println(line)
 		kv := strings.SplitN(strings.TrimSpace(line), ":", 2)
 
 		if len(kv) == 2 {
-			headers[strings.TrimSpace(kv[0])] = strings.TrimSpace(kv[1])
+			key := strings.TrimSpace(kv[0])
+			value := strings.TrimSpace(kv[1])
+			headers[key] = value
+
+			if strings.EqualFold(key, "Content-Length") {
+				contentLength, _ = strconv.ParseInt(value, 10, 64)
+			}
 		}
 	}
+	body := ""
+	if contentLength > 0 {
+		bodyBuffer := make([]byte, contentLength)
+		_, err := io.ReadFull(reader, bodyBuffer)
+		if err != nil {
+			return nil, err
+		}
+		body = string(bodyBuffer)
+	}
+
+	u, _ := url.Parse(path)
 
 	return &Request{
 		Method:        method,
 		Path:          path,
-		ContentLength: 0,
 		Close:         false,
 		Headers:       headers,
+		ContentLength: contentLength,
 		Conn:          conn,
+		Body:          body,
+		URL:           u,
 	}, nil
 }

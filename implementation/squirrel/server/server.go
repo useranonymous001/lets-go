@@ -8,6 +8,7 @@ Implementing Features of ServeMux:
 */
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"squirrel/core"
@@ -31,6 +32,14 @@ func (sm *SqurlMux) Post(path string, handler core.HandlerFunc) {
 	sm.routes["POST "+path] = handler
 }
 
+func (sm *SqurlMux) Put(path string, handler core.HandlerFunc) {
+	sm.routes["PUT "+path] = handler
+}
+
+func (sm *SqurlMux) Delete(path string, handler core.HandlerFunc) {
+	sm.routes["DELETE "+path] = handler
+}
+
 func (sm *SqurlMux) Listen(addr string) {
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -48,6 +57,9 @@ func (sm *SqurlMux) Listen(addr string) {
 		go func(conn net.Conn) {
 			defer conn.Close()
 			req, err := core.ParseRequest(conn)
+
+			fmt.Printf("%+v", *req)
+
 			if err != nil {
 				log.Fatal("Error parsing the request", err)
 			}
@@ -70,37 +82,3 @@ func (sm *SqurlMux) Listen(addr string) {
 	}
 
 }
-
-// func ListenToServer(addr string) {
-
-// 	ln, err := net.Listen("tcp", addr)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	log.Println("Listening at", addr)
-
-// 	for {
-// 		conn, err := ln.Accept()
-// 		if err != nil {
-// 			log.Fatal("failed to accept connection:", err)
-// 		}
-// 		go handleConnection(conn)
-// 	}
-
-// }
-
-// func handleConnection(conn net.Conn) {
-
-// 	defer conn.Close()
-
-// 	req, err := core.ParseRequest(conn)
-
-// 	if err != nil {
-// 		log.Fatal("Error Parsing Request, ", err)
-// 		return
-// 	}
-
-// 	core.ServeRequest(req)
-
-// }
