@@ -27,35 +27,52 @@ How multiple Go Routines Communicate to each other??
 Go Routine is like a process that is running in the background
 */
 
+/*
+	sync.WorkGroup package
+
+
+	var wg = sync.WorkGroup
+
+	wg.Add(int)  => add the number of go routines to wait for
+	wg.Wait()   => block the further operation until the go routines are completed execution
+	wg.Done()   => indicates that the task has been completed of that go routine
+	             and now decrement the number of go routine to wait for
+
+*/
+
 var msg string
 var c = make(chan int)
-var wg sync.WaitGroup
+var workGroup sync.WaitGroup
 
 func setMessage() {
 	msg = "This is Go Routine"
 	// c <- 0 // sending the value to the receiver
-	wg.Done()
+	workGroup.Done()
 }
 
 func sayHello() {
 	fmt.Println("Hello Gophers")
-	wg.Done()
+	workGroup.Done()
 }
 
 // main() is special go routine invoked during the startup of any program.
 func main() {
-	wg.Add(2)
-	go setMessage() // called as a goroutine so, goes to the background and main goroutine exec continues
-	go sayHello()
+	// workGroup.Add(2)
+	// go setMessage() // called as a goroutine so, goes to the background and main goroutine exec continues
+	// go sayHello()
 
 	// time.Sleep(1 * time.Millisecond) // Sleep pauses the current goroutine(main go-routine for now) for at least the duration d
-	wg.Wait()
+	// workGroup.Wait()
 
-	fmt.Println(msg)
+	// fmt.Println(msg)
 
 	// other funcs
 	// channelInGo()
 	// channelInWork()
+
+	// MainGoRoutine()
+	// MainWeiredGoRoutines()
+	MainMutexes()
 }
 
 // CHANNELS
