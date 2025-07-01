@@ -16,6 +16,7 @@ type Response struct {
 	body        io.ReadCloser
 	contentType string
 	statusCode  int
+	close       bool
 }
 
 var (
@@ -24,6 +25,8 @@ var (
 		404: "Not Found",
 		302: "Redirect",
 		500: "Internal Server Error",
+		403: "Forbidden",
+		401: "Bad Request",
 		// TODO: add more status texts as needed
 	}
 )
@@ -68,6 +71,10 @@ Compressed/gzipped data
 */
 func (r *Response) WriteBytes(b []byte) {
 	r.body = io.NopCloser(bytes.NewReader(b))
+}
+
+func (r *Response) Close() {
+	r.close = true
 }
 
 func (r *Response) JSON(data interface{}) {
