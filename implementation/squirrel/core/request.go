@@ -2,6 +2,7 @@ package core
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -15,11 +16,22 @@ type Request struct {
 	Method        string
 	Path          string
 	Headers       map[string]string
-	Body          string
+	Body          io.ReadCloser
 	Conn          net.Conn
 	Close         bool
 	ContentLength int64
 	URL           *url.URL
+}
+
+// methods for req type
+// req.Body  --> accessing fields
+// eg: req.ReadBodyAsString(req.body)
+func (r *Request) ReadBodyAsString() (string, error) {
+	data, err := io.ReadAll(r.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
 
 func ParseRequest(conn net.Conn) (*Request, error) {
@@ -57,14 +69,16 @@ func ParseRequest(conn net.Conn) (*Request, error) {
 			}
 		}
 	}
-	body := ""
+	// handle post request
+	var body = io.NopCloser(strings.NewReader(""))
 	if contentLength > 0 {
 		bodyBuffer := make([]byte, contentLength)
 		_, err := io.ReadFull(reader, bodyBuffer)
 		if err != nil {
 			return nil, err
 		}
-		body = string(bodyBuffer)
+		// converting []byte type to io.Reader type
+		body = io.NopCloser(bytes.NewReader(bodyBuffer))
 	}
 
 	u, _ := url.Parse(path)
