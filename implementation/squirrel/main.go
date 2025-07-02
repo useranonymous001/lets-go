@@ -11,6 +11,6 @@ func main() {
 	server.Post("/hello", handlers.Hello)
 	server.Get("/file", handlers.ReadFile)
 	server.Get("/json", handlers.UseJson)
-	server.Get("/byte", handlers.UseBytes)
+	server.Get("/byte/:id/read", handlers.UseBytes)
 	server.Listen(":9000")
 }

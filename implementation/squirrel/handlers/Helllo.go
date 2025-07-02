@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"squirrel/core"
@@ -21,6 +22,13 @@ func UseJson(req *core.Request, res *core.Response) {
 }
 
 func UseBytes(req *core.Request, res *core.Response) {
+
+	url := req.URL
+	id := req.Params["id"]
+	fmt.Println("-------")
+	fmt.Println("url: ", url)
+	fmt.Println("id: ", id)
+	fmt.Println("-------")
 	res.SetHeader("X-Use-Bytes", "Using Bytes")
 	res.WriteBytes([]byte("What the hell is happening here??"))
 }

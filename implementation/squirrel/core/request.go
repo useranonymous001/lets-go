@@ -21,6 +21,7 @@ type Request struct {
 	Close         bool
 	ContentLength int64
 	URL           *url.URL
+	Params        map[string]string
 }
 
 // methods for req type
@@ -32,6 +33,12 @@ func (r *Request) ReadBodyAsString() (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+// methods for req type
+// req.query --> accessing any query params
+func (r *Request) Query() *url.URL {
+	return r.URL
 }
 
 func ParseRequest(conn net.Conn) (*Request, error) {
