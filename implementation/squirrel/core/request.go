@@ -41,6 +41,10 @@ func (r *Request) Query() *url.URL {
 	return r.URL
 }
 
+func (r *Request) Param(paramName string) string {
+	return r.Params[paramName]
+}
+
 func ParseRequest(conn net.Conn) (*Request, error) {
 	reader := bufio.NewReader(conn)
 
