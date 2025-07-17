@@ -66,7 +66,7 @@ func (sm *SqurlMux) Use(mw Middleware) {
 
 // Now All the Methods need to be able to
 // accept middlwares, after the actual handler
-// the middleware will be executed in reverse order
+// the middleware will be executed in same  order they are kept in
 // in which they are placed
 func (sm *SqurlMux) Get(path string, handler core.HandlerFunc, mws ...Middleware) {
 	sm.routes = append(sm.routes, route{
@@ -150,14 +150,14 @@ func (sm *SqurlMux) Listen(addr string) {
 					// adding middleware to the respective handlers
 					routeHandler := rt.handler
 
-					// first handle route specific handlers
+					// first handle route specific  middleware  handlers
 					// cause we need to handle the global middleware first
 					for i := len(rt.middlewares) - 1; i >= 0; i-- {
 						// explanation at top
 						routeHandler = rt.middlewares[i](routeHandler) // Logger(routeHandler)
 					}
 
-					// now handle global middlewares handlers
+					// now handle global middlewares specific handlers
 					// cause it needs to be executed first
 					for i := len(sm.middleware) - 1; i >= 0; i-- {
 						routeHandler = sm.middleware[i](routeHandler) // keep on wrapping the middleware
