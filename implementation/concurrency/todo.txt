@@ -1,11 +1,11 @@
-🧠 Level 1: Core Concurrency & Synchronization
+🧠 Level 1: Core Concurrency & Synchronization✅ 
 1. Safe Counter with Mutex
 Create a counter that can be safely incremented by 100 goroutines. Each goroutine should increment the counter 1000 times.
 
 ✅ Use sync.Mutex
 ✅ Print the final count (should be 100000)
 
-2. Bank Account Simulation
+2. Bank Account Simulation✅ 
 Simulate a bank account where multiple goroutines deposit and withdraw money.
 
 Protect shared balance with mutex.
@@ -15,7 +15,7 @@ Ensure that a withdrawal doesn't happen if balance is insufficient.
 ✅ Use condition variable to wait for sufficient balance before withdrawing
 ✅ Prevent race conditions on balance
 
-3. Producer-Consumer (Bounded Buffer)
+3. Producer-Consumer (Bounded Buffer)✅ 
 Implement a producer-consumer system using a fixed-size slice (buffer).
 
 Producer adds items to buffer.
@@ -30,20 +30,20 @@ If buffer is empty, consumer waits.
 ✅ Simulate multiple producers and consumers
 
 🧠 Level 2: Coordination & Wait Groups
-4. Wait for N Workers to Finish
+4. Wait for N Workers to Finish✅ 
 Spin off 10 goroutines that do some "work" (e.g., sleep + print). The main goroutine should wait until all of them are done before exiting.
 
 ✅ Use sync.WaitGroup
 ✅ Learn how Add, Done, and Wait work
 
-5. One-Time Initialization (Once)
+5. One-Time Initialization (Once)✅ 
 Use sync.Once to initialize a configuration (e.g., load from file). Simulate 10 goroutines trying to access the config — only one should trigger the load function.
 
 ✅ Use sync.Once
 ✅ Confirm config load message prints once
 
 🧠 Level 3: Realistic Coordination Challenges
-6. Reader-Writer Lock
+6. Reader-Writer Lock✅ 
 Simulate multiple readers and writers on a shared log buffer.
 
 Multiple readers can read at once.
@@ -55,7 +55,7 @@ No reader can read while writing is in progress.
 ✅ Use sync.RWMutex
 ✅ Show how reads and writes interleave safely
 
-7. Traffic Light Controller
+7. Traffic Light Controller✅ 
 You have 3 lanes: red, yellow, green. Only one can be active at a time.
 
 Change light every 2 seconds in a loop.
@@ -74,9 +74,7 @@ Simulate an elevator system:
 5 floors
 
 Goroutines simulate passengers requesting floors
-
 Elevator moves between floors, picking up and dropping off
-
 Handle concurrent requests without deadlocks
 
 ✅ Use mutexes and condition variables to model movement and wait logic

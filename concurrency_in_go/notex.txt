@@ -1,0 +1,51 @@
+
+Packages
+    Packages represents a single go file.
+
+Modules in GO
+    Modules are the collection of go packages stored in a file tree with a go.mod file at its root
+
+    go.mod contains
+        - module path 
+
+        - dependencies requirements 
+            Format:  module-path semantic-version
+
+            Direct dependencies
+                - main dependencies (module) imported
+            Indirect dependencies
+                - other dependencies used by the imported main dependencies (indirect)
+
+            Eg: 
+                ## Direct
+                require (
+                    github.com/gocolly/module v1.0.0
+                )
+
+                ## Indirect
+                require (
+                    github.com/PuerkitoBio/goquery v1.10.2 // indirect
+                )
+
+
+    ### go.sum
+    - Includes the all the checksum for each of the packages to maintain integrity of the packages
+
+
+
+    ### Creating a pseudo version and getting the specifix commit version
+
+    go get github.com/repo/module/v4@commit-hash
+
+    ### Downgrading the version
+
+    go get github.com/repo/module/v4@v4.10.0
+
+
+    ### checking if any updates available 
+
+    go list -m -u github.com/repo/module/v4
+
+    ### Update if any available
+
+    go get -u github.com/repo/module/v4

@@ -1,66 +1,50 @@
 package main
 
-import "sync"
+import (
+	"fmt"
+	"time"
+)
 
-/*
-Building your own reader writer mutex, to understand it more well.
+// use case of ReaderWriterMutex with reader preferred mutex
+// func main() {
 
-RLock => ReadLock
-WLock => WriteLock
-RUnlock => ReadUnlock
-WUnlock => WriteUnlock
+// 	rwmutex := ReaderWriterMutex{}
 
-*/
+// 	for i := 0; i < 2; i++ {
+// 		go func() {
+// 			for {
+// 				rwmutex.ReadLock() // holds the reader lock
+// 				time.Sleep(time.Second)
+// 				fmt.Println("Read Done")
+// 				rwmutex.ReadUnlock()
+// 			}
+// 		}()
+// 	}
 
-// readersLock  ==> simulating the readers lock
-// writersLock  ==> simulating the writers lock
-// readersCounter ==> keeping track of number of readers inside the critical section
+// 	time.Sleep(time.Second * 1)
+// 	// after the reading is done, try to aquire the writer lock
+// 	rwmutex.WriteLock()
+// 	fmt.Println("write finished")
 
-// structure for reader writer mutex
+// }
 
-type ReadWriteMutex struct {
-	readersCounter int
-	readersLock    sync.Mutex
-	globalLock     sync.Mutex
-}
+func main() {
+	rwmutex := ReadWriteMutex{}
+	wmutex := rwmutex.NewReadWriteMutex()
 
-func (rw *ReadWriteMutex) ReadLock() {
-
-	rw.readersLock.Lock() // lock the readers so that no other reader interfere
-	rw.readersCounter++   // now increment the readers count
-
-	// now if the reader is first one to enter
-	// block the writer from entering the critical section
-
-	if rw.readersCounter == 1 {
-		rw.globalLock.Lock()
-	}
-	rw.readersLock.Unlock() // release the reader lock so that other readers can also enter the critical section
-}
-
-func (rw *ReadWriteMutex) WriteLock() {
-	// just lock the critical section, blocking all other go routine
-	rw.globalLock.Lock()
-}
-
-func (rw *ReadWriteMutex) ReadUnlock() {
-	// unlock the global lock
-
-	// lock the readers so that only one reader can exit at a time
-	rw.readersLock.Lock()
-	rw.readersCounter--
-
-	// check whether the reader exiting is the last reader or not
-	// if so, release the global lock, so that write can now access the critical section
-	if rw.readersCounter == 0 {
-		rw.globalLock.Unlock()
+	for i := 0; i < 2; i++ {
+		go func() {
+			for {
+				wmutex.ReadLock()
+				time.Sleep(time.Second)
+				fmt.Println("Read Done")
+				wmutex.ReadUnlock()
+			}
+		}()
 	}
 
-	// now release the final reader
-	rw.readersLock.Unlock()
-}
+	time.Sleep(time.Second)
+	wmutex.WriteLock()
+	fmt.Println("write done")
 
-func (rw *ReadWriteMutex) WriteUnlock() {
-	// unlock the global locker again free for other reader
-	rw.globalLock.Unlock()
 }

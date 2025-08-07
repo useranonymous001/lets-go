@@ -14,7 +14,7 @@ type Closer interface {
 	Close() error
 }
 
-// just like we embed two structs, we can also compose two or more interfaces
+// just like we embed two structs, we can also compose two or more interfacesss
 type WriterCloser interface {
 	Writer
 	Closer
@@ -29,6 +29,7 @@ type BufferedWriterCloser struct {
 
 func MainInterfaceComposition() {
 
+	closer := NewBufferedWriterCloser()
 	writer := NewBufferedWriterCloser()
 	writer.Write([]byte("Hello, I am Lazinerd. I am learning GO from Scratch"))
 	writer.Close()
@@ -39,9 +40,8 @@ func MainInterfaceComposition() {
 
 	// type assertion/conversion
 	// sometimes we may have to work with concrete data inside the named types
-	// but we can't figure out thaat using some interfaces
+	// but we can't figure out that using some interfaces
 	// for that reason: we use type conversion to get the underlying type to work with
-
 	data, ok := wc.(*BufferedWriterCloser) // then type converge here...
 	fmt.Println(data, ok)
 
@@ -53,6 +53,7 @@ func MainInterfaceComposition() {
 
 	// or just call the function that accepts the interface type as an argument
 	Public(writer)
+	Public(closer)
 	// Public(io.Reader) // cannot type converge the interface because our interface does not have Read() method defined
 }
 
@@ -84,7 +85,6 @@ func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
 // now while printing the data from the buffer, the last chunk may have the length less than 8
 // so its gonna be missed out by the Write() methods
 // so we implement the Close() method that can flush the remaining buffered data
-
 func (bwc *BufferedWriterCloser) Close() error {
 	for bwc.buffer.Len() > 0 {
 		data := bwc.buffer.Next(8) // returns a slice containing the next n bytes from the buffer,
@@ -107,12 +107,19 @@ func Public(wc WriterCloser) {
 	fmt.Println(wc)
 
 	// type switches
-	// switch v := wc.(type) {
-	// case *BufferedWriterCloser:
-	// 	{
-	// 		fmt.Println(*v.buffer)
+	// wc is an interface and we converge the underlying type of the interface
+	switch v := wc.(type) {
 
-	// 	}
-	// }
+	default:
+		fmt.Println("Haina k pathauxa hau malai")
+
+		// what does it means is:
+		// if type of v is *BufferWriterCloser
+	case *BufferedWriterCloser:
+		{
+			fmt.Println(*v.buffer)
+
+		}
+	}
 
 }
