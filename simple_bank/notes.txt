@@ -1,0 +1,62 @@
+## Installing GO: 
+  sudo snap install go --classic
+
+=======================================================================================================
+=======================================================================================================
+
+## Installing sqlc:
+  sudo snap install sqlc
+
+=======================================================================================================
+=======================================================================================================
+
+
+## Running a Docker Container
+   docker run --name <container-name> -e <environment_variable> -d <image>:<tag> 
+	
+where:
+	--name => used to specify the container name
+	-e => used to specify the environment variable for the image
+	-d => run the container in the detached mode (in the background) 
+
+=======================================================================================================
+=======================================================================================================
+
+
+## Running exec to the docker images/container:
+   - docker exec -ti <container_name> <command_name> 
+   Eg: connecting to the db that we've just installed(postgres) 
+	docker exec -ti simple_bank_cont psql -U simple_bank 
+	
+	where: 	
+		ti => opens up the interactive ttl for db
+		-U => for specifying the user to access the db
+		psql => cli tool to interact with postgres dbms
+
+=======================================================================================================
+=======================================================================================================
+
+## Creating migration with golang-migrate: 
+  $ migrate create -ext sql -dir db/migration -seq init_schema    
+	
+	where: 
+		-ext => refers to the language extension to use (for now we are using postgres). 
+		-dir => directory for the migration to store
+		-seq => naming files sequentially like:
+						00001_init_schema_up.sql    
+						00002_init_schema_down.sql
+	golang-migrate creates two migration file, one "up" file and another "down" file, up for creating all kinds of tables and "down" for reverting any changes to "up" files.
+
+
+
+
+
+
+   						
+
+
+
+ 
+
+
+
