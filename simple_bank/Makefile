@@ -14,6 +14,13 @@ migrateup:
 migratedown:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/root?sslmode=disable" -verbose force 1 down
 
+sqlc: 
+	sqlc generate
 
+test: 
+	go test -v -cover ./... 
 
-.PHONY: createdb dropdb migrateup migratedown
+test_no_cache:
+	go test -v -cover -test.cache=false ./...
+
+.PHONY: createdb dropdb migrateup migratedown sqlc test
